@@ -1,32 +1,56 @@
+<!--
+    vue 脚手架创建项目的方式
+        1： webstorm创建
+        2： vue ui  在可视化窗口勾选
+        3: 执行命令
+              vue create 项目名称
+
+
+     脚手架项目的文件夹
+        public： 固定的 2个 一个是html  一个是图标
+        src 编码的地方
+         assets： 放置静态资源
+         components： 放置小组件
+         router: 表示的路由
+         store： 表示的是状态管理
+         views： 用户展示的页面
+         App.vue： 表示我们的页面
+         main.j： 是项目的入口
+         package.json 类似maven工程pom文件
+
+     SPA单页面应用程序
+        使用Vue脚手架创建的项目 是单页面应用程序  整个项目只有一个页面  index.html
+  -->
+<!--
+一个Vue组件 有三部分组成
+      模板  template template标签是html5的标签 表示模板标签
+             编写的是html代码
+             要求 有且仅有一个根标签
+
+      js   script
+
+      css  style
+
+
+-->
 <template>
   <div id="app">
-    <div id="nav">
-      <router-link to="/">Home</router-link> |
-      <router-link to="/about">About</router-link>
-    </div>
     <router-view/>
   </div>
 </template>
 
 <style lang="scss">
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
+html,body,#app {
+  width: 100%;
+  height: 100%;
+}
+* {
+  padding: 0;
+  margin: 0;
 }
 
-#nav {
-  padding: 30px;
-
-  a {
-    font-weight: bold;
-    color: #2c3e50;
-
-    &.router-link-exact-active {
-      color: #42b983;
-    }
-  }
+img {
+  vertical-align: middle;
 }
+
 </style>
