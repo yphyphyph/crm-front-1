@@ -12,8 +12,9 @@
           <el-menu
               active-text-color="#F56C6C"
               text-color="#606266"
-              default-active="1">
-            <el-menu-item index="1">
+              router
+          >
+            <el-menu-item index="/">
               <i class="el-icon-menu"></i>
               <span slot="title">系统首页</span>
             </el-menu-item>
@@ -22,16 +23,16 @@
                 <i class="el-icon-location"></i>
                 <span>商品相关</span>
               </template>
-              <el-menu-item index="2-1">
+              <el-menu-item index="/brand">
                 <i class="el-icon-menu"></i>
                 <span slot="title">品牌管理</span>
               </el-menu-item>
-              <el-menu-item index="2-2">
+              <el-menu-item index="/category">
                 <i class="el-icon-menu"></i>
                 <span slot="title">分类管理</span>
               </el-menu-item>
 
-              <el-menu-item index="2-3">
+              <el-menu-item index="/good">
                 <i class="el-icon-menu"></i>
                 <span slot="title">商品管理</span>
               </el-menu-item>
@@ -41,7 +42,7 @@
                 <i class="el-icon-location"></i>
                 <span>员工相关</span>
               </template>
-              <el-menu-item index="3-1">
+              <el-menu-item index="/dept">
                 <i class="el-icon-menu"></i>
                 <span slot="title">部门管理</span>
               </el-menu-item>
@@ -81,13 +82,53 @@
               </el-submenu>
 
             </el-submenu>
+
+
+            <el-submenu index="5">
+              <template slot="title">
+                <i class="el-icon-location"></i>
+                <span>测试滚动条</span>
+              </template>
+              <el-menu-item index="5-1">
+                <i class="el-icon-menu"></i>
+                <span slot="title">测试滚动条</span>
+              </el-menu-item>
+              <el-menu-item index="5-2">
+                <i class="el-icon-menu"></i>
+                <span slot="title">测试滚动条</span>
+              </el-menu-item>
+              <el-submenu index="6">
+                <template slot="title">
+                  <i class="el-icon-location"></i>
+                  <span>测试滚动条</span>
+                </template>
+                <el-menu-item index="6-1">
+                  <i class="el-icon-menu"></i>
+                  <span slot="title">测试滚动条</span>
+                </el-menu-item>
+                <el-menu-item index="6-2">
+                  <i class="el-icon-menu"></i>
+                  <span slot="title">测试滚动条</span>
+                </el-menu-item>
+              </el-submenu>
+
+            </el-submenu>
           </el-menu>
         </el-scrollbar>
 
 
       </el-aside>
       <el-container>
-        <el-header>Header</el-header>
+        <el-header>
+          <div class="header-left">
+            <i class="el-icon-s-fold"></i>
+            <span style="margin-left: 20px">{{ time }}</span>
+          </div>
+          <div class="hearder-right">
+
+          </div>
+
+        </el-header>
         <el-main>
           <div class="main-box">
             <router-view/>
@@ -99,9 +140,20 @@
 </template>
 
 <script>
+
+import moment from 'moment'
 export default {
   name: "index",
-  methods: {}
+  data() {
+    return {
+      time: ''
+    }
+  },
+  created() {
+    setInterval(() =>
+        this.time= moment().format('yyyy-MM-DD HH:mm:ss')
+        , 1000);
+  }
 }
 </script>
 
@@ -112,15 +164,14 @@ export default {
 
 .el-header {
   background-color: #F56C6C;
-  color: #333;
-  text-align: center;
+  color: #fff;
   line-height: 60px;
 }
 
 .el-aside {
   background-color: #fff;
   color: #333;
-
+  overflow: hidden;
 
   .aside-logo-wrapper {
     text-align: center;
@@ -163,6 +214,7 @@ export default {
     background-color: #fff;
     padding: 15px 0px 0px 15px;
     box-sizing: border-box;
+    overflow: hidden;
   }
 
 

@@ -6,10 +6,9 @@
       <!--      查询表单 -->
       <div class="search-form">
         <el-form :inline="true" class="demo-form-inline" size="mini">
-          <el-form-item label="品牌名称">
-            <el-input placeholder="请输入品牌名称" v-model="searchParams.brandName"></el-input>
+          <el-form-item label="部门名称">
+            <el-input placeholder="请输入品牌名称" v-model="searchParams.deptName"></el-input>
           </el-form-item>
-
           <el-form-item label="开始时间">
             <el-date-picker
                 style="width: 240px"
@@ -32,14 +31,14 @@
       </div>
       <!--    操作功能 -->
       <div class="crud-box">
-        <el-button type="primary" size="mini" icon="el-icon-edit" @click="dialogVisible=true,formData={},imageUrl=''">
+        <el-button type="primary" size="mini" icon="el-icon-edit" @click="dialogVisible=true,formData={},getRootDeptList(),isTop=true">
           新建
         </el-button>
-        <el-button type="success" size="mini" icon="el-icon-edit" :disabled="batchIds.length!=1"
-                   @click="dialogVisible=true,findById()">修改
+        <el-button type="success" size="mini" icon="el-icon-edit"
+                   @click="dialogVisible=true,findById()" :disabled="disable">修改
         </el-button>
-        <el-button type="danger" size="mini" icon="el-icon-delete" :disabled="batchIds.length<=0"
-                   @click="showBatchDeleteDialog">删除
+        <el-button type="danger" size="mini" icon="el-icon-delete"
+                   @click="showBatchDeleteDialog" :disabled="disable">删除
         </el-button>
       </div>
     </div>
@@ -50,41 +49,31 @@
         <el-table
             :data="tableData"
             style="width: 100%"
-
-            @selection-change="selectChange">
+            ref="huige"
+            highlight-current-row
+            lazy
+            :load="loadTableData"
+            @row-click="rowClick"
+            row-key="id"
+            :tree-props="{children:'children',hasChildren:'hasChildren'}"
+        >
           <el-table-column
               align="center"
-              type="selection"
-              width="55">
-          </el-table-column>
-          <el-table-column
-              align="center"
-              prop="brandName"
-              label="品牌名称"
+              prop="deptName"
+              label="部门名称"
               width="180">
           </el-table-column>
           <el-table-column
               align="center"
-              prop="brandDesc"
-              label="品牌描述"
+              prop="deptDesc"
+              label="部门描述"
               width="180">
           </el-table-column>
-          <el-table-column
-              align="center"
-              prop="brandSite"
-              label="品牌站点">
-            <template v-slot="huige">
-              <a :href="huige.row.brandSite">{{ huige.row.brandSite }}</a>
-            </template>
 
-          </el-table-column>
           <el-table-column
               align="center"
-              prop="brandLogo"
-              label="品牌图标">
-            <template v-slot="obj">
-              <img :src="obj.row.brandLogo" alt="" height="30px">
-            </template>
+              prop="deptSort"
+              label="部门排序">
           </el-table-column>
 
           <el-table-column
@@ -107,8 +96,6 @@
                            icon="el-icon-delete"></el-button>
               </el-popconfirm>
             </template>
-
-
           </el-table-column>
         </el-table>
 
@@ -134,30 +121,36 @@
         width="33%"
     >
       <el-form ref="form" label-width="80px" size="small">
-        <el-form-item label="品牌名称">
-          <el-input v-model="formData.brandName"></el-input>
-        </el-form-item>
-        <el-form-item label="品牌站点">
-          <el-input v-model="formData.brandSite"></el-input>
-        </el-form-item>
-        <el-form-item label="品牌图片">
-          <el-upload
-              class="avatar-uploader"
-              action="https://jsonplaceholder.typicode.com/posts/"
-              :show-file-list="false"
-              :http-request="getImgStr">
-            <img v-if="imageUrl" :src="imageUrl" class="avatar">
-            <i v-else class="el-icon-plus avatar-uploader-icon"></i>
-          </el-upload>
-
-        </el-form-item>
-        <el-form-item label="品牌描述">
-          <el-input v-model="formData.brandDesc"></el-input>
-        </el-form-item>
-
+        <el-row :gutter="20">
+          <el-col :span="12">
+            <el-form-item label="部门名称">
+              <el-input v-model="formData.deptName" placeholder="请输入部门名称"></el-input>
+            </el-form-item>
+            <el-form-item label="部门排序">
+              <el-input-number v-model="formData.deptSort" placeholder="请勾选部门排序" controls-position="right" style="width: 100%"></el-input-number>
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="部门描述">
+              <el-input v-model="formData.deptDesc" placeholder="请勾选部门描述"></el-input>
+            </el-form-item>
+            <el-form-item label="是否顶级">
+              <el-radio v-model="isTop" :label="true">是</el-radio>
+              <el-radio v-model="isTop" :label="false">否</el-radio>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row v-if="!isTop">
+          <el-form-item label="选择父级">
+            <treeselect
+                v-model="formData.parentId"
+                :options="treeSelectData"
+                :load-options="loadTreeSelectData"
+                :normalizer="normalizer"
+                placeholder="请选择父级"/>
+          </el-form-item>
+        </el-row>
       </el-form>
-
-
       <span slot="footer" class="dialog-footer">
         <el-button size="mini" @click="dialogVisible = false">取 消</el-button>
         <el-button type="primary" size="mini" @click="dialogVisible = false,addOrEdit()">确 定</el-button>

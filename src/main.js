@@ -12,6 +12,12 @@ Vue.config.productionTip = false
 // normalize.css
 import 'normalize.css/normalize.css'
 
+//引入富文本编辑器
+import VueQuillEditor from 'vue-quill-editor'
+import 'quill/dist/quill.core.css'
+import 'quill/dist/quill.snow.css'
+import 'quill/dist/quill.bubble.css'
+Vue.use(VueQuillEditor);
 //使用elementUI
 Vue.use(ElementUI);
 new Vue({

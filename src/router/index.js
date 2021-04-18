@@ -17,6 +17,23 @@ const routes = [
                 name: 'Brand',
                 component: Brand
             },
+            {
+                path: 'category',
+                name: 'Category',
+                component: () => import(/* webpackChunkName: "about" */ '../views/category/index.vue')
+            },
+            {
+                path: 'good',
+                name: 'Good',
+                component: () => import(/* webpackChunkName: "about" */ '../views/good/index.vue')
+            },
+
+            {
+                path: 'dept',
+                name: 'dept',
+                component: () => import(/* webpackChunkName: "about" */ '../views/dept/index.vue')
+            },
+
 
 
         ]

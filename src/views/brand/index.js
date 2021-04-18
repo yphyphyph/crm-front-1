@@ -1,4 +1,4 @@
-import {findPage, deleteById, batchDelete, addEntity} from '@/api/brand'
+import {findPage, deleteById, batchDelete, addEntity, findById, updateEntity} from '@/api/brand'
 import dateOptions from "@/utils/date";
 import base64 from '@/utils/base64Utils'
 
@@ -13,7 +13,6 @@ let brand = {
                 currentPage: 1,
                 pageSize: 5
             },
-
             batchIds: [],
             dialogVisible: false,
             formData: {},
@@ -55,16 +54,37 @@ let brand = {
          * @param val
          */
         async addOrEdit() {
-            await addEntity(this.formData);
+            if (this.formData.id) {
+                //修改
+                await this.editEntity();
+            } else {
+                await this.addEntity();
+            }
             this.searchPage();
         },
-
-
+        async addEntity() {
+            await addEntity(this.formData);
+        },
+        async editEntity() {
+            await updateEntity(this.formData);
+        },
+        /**
+         * 通过id查询
+         * @param val
+         */
+        async findById() {
+            this.formData = await findById(this.formData.id)
+            this.imageUrl = this.formData.brandLogo
+        },
         //checkbox勾选改变
         selectChange(val) {
+            if (val.length == 1) {
+                this.formData.id = val[0].id;
+            } else {
+                this.formData.id = 0;
+            }
             this.batchIds = val.map(item => item.id);
         },
-
         //选择页数的时候 发生概念
         currentPageChange(page) {
             this.searchParams.currentPage = page;
@@ -72,14 +92,13 @@ let brand = {
         },
         //时间框选择时间
         chooseTime() {
-            this.searchParams.startTime = this.value2[0];
-            this.searchParams.endTime = this.value2[1];
+            this.searchParams.startTime = this.dateOptions.startDate[0];
+            this.searchParams.endTime = this.dateOptions.startDate[1];
         },
         resetForm() {
             this.searchParams = {currentPage: 1, pageSize: 5}
             this.dateOptions.startDate = '';
         },
-
         /**
          * 展示批量删除的弹框
          */
@@ -92,7 +111,6 @@ let brand = {
                 this.batchDeleteByIds();
             })
         },
-
         /**
          * 当图片选择时的钩子函数
          */
@@ -100,7 +118,6 @@ let brand = {
             this.imageUrl = await base64.getBase64Str(e.file)
             this.formData.brandLogo = this.imageUrl;
         }
-
     }
 
 }

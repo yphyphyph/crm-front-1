@@ -35,3 +35,18 @@ export function batchDelete(ids) {
 export function addEntity(entity) {
     return instance.post(`brand`, entity);
 }
+
+/**
+ * 通过id查询
+ */
+
+export function findById(id) {
+    return instance.get(`brand/${id}`);
+}
+
+/**
+ * 修改实体
+ */
+export function updateEntity(entity) {
+    return instance.put(`brand`, entity);
+}
