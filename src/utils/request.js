@@ -3,6 +3,9 @@
 * */
 import axios from "axios";
 
+import NProgress from 'nprogress'
+// import 'nprogress/nprogress.css'
+
 //引入elementUI中的Notification
 import {Notification} from 'element-ui'
 
@@ -17,6 +20,7 @@ const instance = axios.create({
 });
 // Add a request interceptor
 instance.interceptors.request.use(function (config) {
+    NProgress.start();
     return config;
 }, function (error) {
     // Do something with request error
@@ -25,12 +29,15 @@ instance.interceptors.request.use(function (config) {
 
 instance.interceptors.response.use(function (response) {
     let {status, message, data} = response.data;
+    NProgress.done();
     if (status == 20000) {
         return data;
     } else {
         Notification.error(message)
         return Promise.reject(false);
     }
+
+
 }, function (error) {
 
     return Promise.reject(error);

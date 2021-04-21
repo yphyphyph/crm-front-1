@@ -33,6 +33,24 @@ const routes = [
                 name: 'dept',
                 component: () => import(/* webpackChunkName: "about" */ '../views/dept/index.vue')
             },
+            {
+                path: 'admin',
+                name: 'dept',
+                component: () => import(/* webpackChunkName: "about" */ '../views/admin/index.vue')
+            },
+
+            {
+                path: 'role',
+                name: 'Role',
+                component: () => import(/* webpackChunkName: "about" */ '../views/role/index.vue')
+            },
+
+            {
+                path: 'menu',
+                name: 'menu',
+                component: () => import(/* webpackChunkName: "about" */ '../views/menu/index.vue')
+            },
+
 
 
 
