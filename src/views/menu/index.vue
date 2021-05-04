@@ -185,7 +185,7 @@
         <el-row :gutter="20" v-if="formData.menuType!=2">
           <el-col :span="24">
             <el-form-item label="菜单图标">
-              <e-icon-picker  v-model="formData.menuIcon" />
+              <e-icon-picker v-model="formData.menuIcon"/>
 
             </el-form-item>
           </el-col>

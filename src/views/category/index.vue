@@ -34,13 +34,13 @@
       <!--    操作功能 -->
       <div class="crud-box">
         <el-button type="primary" size="mini" icon="el-icon-edit"
-                   @click="dialogVisible=true,formData={categoryLevel: 1},selectIds=[]">新建
+                   v-has-perm="['category:add']"    @click="dialogVisible=true,formData={categoryLevel: 1},selectIds=[]">新建
         </el-button>
         <el-button type="success" size="mini" icon="el-icon-edit" :disabled="!disable"
-                   @click="dialogVisible=true,findById()">修改
+                   v-has-perm="['category:edit']"     @click="dialogVisible=true,findById()">修改
         </el-button>
         <el-button type="danger" size="mini" icon="el-icon-delete" :disabled="!disable" @click="showBatchDeleteDialog"
-        >删除
+                   v-has-perm="['category:delete']"    >删除
         </el-button>
       </div>
     </div>
@@ -85,7 +85,7 @@
             <template v-slot="obj">
               <el-button type="primary" size="mini" icon="el-icon-edit"
                          @click="dialogVisible=true,formData.id=obj.row.id,findById()"
-                         style="margin-right: 5px"></el-button>
+                         v-has-perm="['category:edit']"         style="margin-right: 5px"></el-button>
               <el-popconfirm
                   confirm-button-text='确定'
                   cancel-button-text='取消'
@@ -96,7 +96,7 @@
                   title="是否要删除本条记录？"
               >
                 <el-button slot="reference" type="danger" size="mini"
-                           @click="formData.id=obj.row.id,formData.level=obj.row.categoryLevel"
+                           v-has-perm="['category:delete']"      @click="formData.id=obj.row.id,formData.level=obj.row.categoryLevel"
                            icon="el-icon-delete"></el-button>
               </el-popconfirm>
             </template>

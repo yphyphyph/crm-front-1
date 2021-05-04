@@ -52,6 +52,9 @@ let admin = {
     },
     batchDelete(ids) {
         return instance.delete(`admin/batch/${ids}`)
+    },
+    exportExcel() {
+        return instance(`admin/export`)
     }
 }
 

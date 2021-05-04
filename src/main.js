@@ -19,6 +19,7 @@ import VueQuillEditor from 'vue-quill-editor'
 import 'quill/dist/quill.core.css'
 import 'quill/dist/quill.snow.css'
 import 'quill/dist/quill.bubble.css'
+
 Vue.use(VueQuillEditor);
 import iconPicker from 'e-icon-picker';
 import "e-icon-picker/dist/symbol.js"; //基本彩色图标库
@@ -26,6 +27,22 @@ import 'e-icon-picker/dist/index.css'; // 基本样式，包含基本图标
 import 'font-awesome/css/font-awesome.min.css'; //font-awesome 图标库
 import 'element-ui/lib/theme-chalk/icon.css'; //element-ui 图标库
 Vue.use(iconPicker, {FontAwesome: true, ElementUI: true, eIcon: true, eIconSymbol: true});
+
+//`v-focus`
+
+Vue.directive('hasPerm', {
+    // 当被绑定的元素插入到 DOM 中时……
+    inserted: function (el, binding, vnode) {
+        var btnPerms = JSON.parse(localStorage.getItem("btnPerm"));
+        var value = binding.value;
+        var hasPerm = btnPerms.some(item => value.includes(item.permission));
+        if (!hasPerm) {
+            el.remove()&&el.parentNode.remove();
+        }
+
+
+    }
+})
 
 //使用elementUI
 Vue.use(ElementUI);

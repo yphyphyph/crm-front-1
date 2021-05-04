@@ -1,5 +1,15 @@
-import {findPage, deleteById, batchDelete, addEntity, findById, updateEntity} from '@/api/role'
+import {
+    findPage,
+    deleteById,
+    batchDelete,
+    addEntity,
+    findById,
+    updateEntity,
+    setRoleMenus,
+    getMenuByRoleId
+} from '@/api/role'
 import dateOptions from "@/utils/date";
+import menu from "@/api/menu";
 
 
 let brand = {
@@ -16,11 +26,20 @@ let brand = {
             batchIds: [],
             dialogVisible: false,
             formData: {},
+            menuList: [],
+            defaultProps: {
+                children: 'children',
+                label: 'menuTitle'
+            },
+            clickId: 0,
+            selectMenuIds: [],
+            expandIds: []
 
         }
     },
     created() {
         this.searchPage();
+        this.getAllMenuTree();
     },
     methods: {
         /*
@@ -30,6 +49,14 @@ let brand = {
             let response = await findPage(this.searchParams);
             this.total = response.total;
             this.tableData = response.data;
+        },
+
+        /**
+         * 加载所有的权限
+         */
+        async getAllMenuTree() {
+            let response = await menu.getAllMenuTree();
+            this.menuList = response[0].children;
         },
 
         /**
@@ -76,6 +103,26 @@ let brand = {
             this.formData = await findById(this.formData.id)
             this.imageUrl = this.formData.brandLogo
         },
+        /**
+         * 给角色添加菜单（权限）
+         * @param val
+         */
+
+        async setRoleMenus() {
+            await setRoleMenus(this.clickId, this.selectMenuIds);
+
+        },
+
+        /**
+         * 通过角色id获取到角色的权限
+         * @param val
+         */
+        async getMenuByRoleId() {
+            let response = await getMenuByRoleId(this.clickId);
+            this.$refs.tree.setCheckedKeys(response);
+
+        },
+
         //checkbox勾选改变
         selectChange(val) {
             if (val.length == 1) {
@@ -111,6 +158,34 @@ let brand = {
                 this.batchDeleteByIds();
             })
         },
+        /**
+         * 每一条数据的点击事件
+         */
+        rowClick(row, column, event) {
+            this.expandIds=[]
+            this.clickId = row.id;
+            this.getMenuByRoleId();
+        },
+
+        /**
+         * 显示确定菜单的弹框
+         */
+        showMenuMessageBox() {
+            this.$confirm('你确定要添加这些权限吗?', '温馨提示', {
+                confirmButtonText: '确定',
+                cancelButtonText: '取消',
+                type: 'warning'
+            }).then(() => {
+                //确定
+                this.selectMenuIds = this.$refs.tree.getHalfCheckedKeys().concat(this.$refs.tree.getCheckedKeys());
+                this.setRoleMenus();
+
+
+            }).catch(() => {
+                //取消
+            });
+        }
+
 
     }
 

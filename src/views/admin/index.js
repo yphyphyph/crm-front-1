@@ -7,6 +7,8 @@ import Treeselect from '@riophae/vue-treeselect'
 // import the styles
 import '@riophae/vue-treeselect/dist/vue-treeselect.css'
 
+import baseURL from "@/utils/BaseURL";
+
 
 let brand = {
     components: {Treeselect},
@@ -16,6 +18,7 @@ let brand = {
             dateOptions,
             tableData: [],
             total: 0,
+            exportURL: baseURL.baseURL + "admin/export",
             searchParams: {
                 currentPage: 1,
                 pageSize: 5
@@ -38,6 +41,27 @@ let brand = {
             cityList: [],
             areaList: [],
             roleList: [],
+            rules: {
+                adminName: [
+                    {type: 'string', required: true, message: '请输入员工名称', trigger: 'blur'}
+                ],
+                nickName: [
+                    {required: true, message: '请输入员工昵称', trigger: 'blur'}
+                ],
+                adminPhone: [
+                    {required: true, message: '请输入手机号', trigger: 'blur'},
+                    {pattern: /^1[34578]\d{9}$/, message: '你输入的格式不正确', trigger: 'blur'}
+                ],
+                adminEmail: [
+                    {required: true, message: '请输入邮箱', trigger: 'blur'},
+                    {type: 'email', message: '请输入正确的邮箱地址', trigger: 'blur'}
+                ],
+                adminAddress: [
+                    {required: true, message: '请输入详细地址', trigger: 'blur'},
+                ]
+
+
+            }
         }
     },
     created() {
@@ -107,7 +131,12 @@ let brand = {
 
 
         uploadSuccess(response) {
-            this.formData.adminAvatar = response.data;
+            let {status, message, data} = response;
+            if (status == 20000) {
+                this.formData.adminAvatar = data;
+            } else {
+                this.$notify.error(message);
+            }
         },
         /**
          * 通过id删除
@@ -127,18 +156,35 @@ let brand = {
         },
 
         /**
+         * 导出表格
+         */
+        exportExcel() {
+            admin.exportExcel();
+        },
+
+        /**
          * 添加数据
          * @param val
          */
         async addOrEdit() {
-            this.formData.adminAddress = this.province + " " + this.city + " " + this.area + " " + this.formData.adminAddress;
-            if (this.formData.id) {
-                //修改
-                await admin.updateEntity(this.formData);
-            } else {
-                await admin.addEntity(this.formData);
-            }
-            this.searchPage();
+            this.$refs.form.validate(async (valid) => {
+                if (valid) {
+                    this.dialogVisible = false;
+                    this.formData.adminAddress = this.province + " " + this.city + " " + this.area + " " + this.formData.adminAddress;
+                    if (this.formData.id) {
+                        //修改
+                        await admin.updateEntity(this.formData);
+                    } else {
+                        await admin.addEntity(this.formData);
+                    }
+                    this.searchPage();
+                    this.resetRule();
+                } else {
+                    return false;
+                }
+            });
+
+
         },
 
         /**
@@ -192,7 +238,7 @@ let brand = {
                 gender: 0,
                 isEnable: false,
                 adminAddress: '',
-                roleIds:[],
+                roleIds: [],
             }
         },
         /**
@@ -213,7 +259,12 @@ let brand = {
         async getImgStr(e) {
             this.imageUrl = await base64.getBase64Str(e.file)
             this.formData.brandLogo = this.imageUrl;
+        },
+
+        resetRule() {
+            this.$refs.form.resetFields();
         }
+
     }
 
 }

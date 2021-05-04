@@ -43,72 +43,106 @@
         </el-button>
       </div>
     </div>
-    <!--可滚动区域-->
-    <el-scrollbar>
-      <!--    表格数据-->
-      <div class="data-box">
-        <el-table
-            :data="tableData"
-            style="width: 100%"
 
-            @selection-change="selectChange">
-          <el-table-column
-              align="center"
-              type="selection"
-              width="55">
-          </el-table-column>
-          <el-table-column
-              align="center"
-              prop="roleName"
-              label="角色名称"
-              width="180">
-          </el-table-column>
-          <el-table-column
-              align="center"
-              prop="roleDesc"
-              label="角色描述"
-              width="180">
-          </el-table-column>
-          <el-table-column
-              align="center"
-              label="操作">
-            <template v-slot="obj">
-              <el-button type="primary" size="mini" icon="el-icon-edit"
-                         @click="dialogVisible=true,formData.id=obj.row.id,findById()"
-                         style="margin-right: 5px"></el-button>
-              <el-popconfirm
-                  confirm-button-text='确定'
-                  cancel-button-text='取消'
-                  icon="el-icon-info"
-                  icon-color="red"
-                  @confirm="deleteById"
-                  placement="top"
-                  title="是否要删除本条记录？"
+
+    <div class="role-menu-box">
+      <el-row :gutter="30">
+        <el-col :span="12">
+          <!--可滚动区域-->
+          <el-scrollbar>
+            <!--    表格数据-->
+            <div class="data-box">
+              <el-table
+                  :data="tableData"
+                  style="width: 100%"
+                  @row-click="rowClick"
+                  highlight-current-row
+                  @selection-change="selectChange">
+                <el-table-column
+                    align="center"
+                    type="selection"
+                    width="55">
+                </el-table-column>
+                <el-table-column
+                    align="center"
+                    prop="roleName"
+                    label="角色名称"
+                    width="180">
+                </el-table-column>
+                <el-table-column
+                    align="center"
+                    prop="roleDesc"
+                    label="角色描述"
+                    width="180">
+                </el-table-column>
+                <el-table-column
+                    align="center"
+                    label="操作">
+                  <template v-slot="obj">
+                    <el-button type="primary" size="mini" icon="el-icon-edit"
+                               @click.native.stop="dialogVisible=true,formData.id=obj.row.id,findById()"
+                               style="margin-right: 5px"></el-button>
+                    <el-popconfirm
+                        confirm-button-text='确定'
+                        cancel-button-text='取消'
+                        icon="el-icon-info"
+                        icon-color="red"
+                        @confirm="deleteById"
+                        placement="top"
+                        title="是否要删除本条记录？"
+                    >
+                      <el-button slot="reference" type="danger" size="mini" @click.native.stop="formData.id=obj.row.id"
+                                 icon="el-icon-delete"></el-button>
+                    </el-popconfirm>
+                  </template>
+
+
+                </el-table-column>
+              </el-table>
+
+            </div>
+            <!--    分页-->
+            <div class="page-box">
+              <el-pagination
+                  background
+                  layout="prev, pager, next"
+                  :total="total"
+                  :page-size="searchParams.pageSize"
+                  :current-page="searchParams.currentPage"
+                  @current-change="currentPageChange"
               >
-                <el-button slot="reference" type="danger" size="mini" @click="formData.id=obj.row.id"
-                           icon="el-icon-delete"></el-button>
-              </el-popconfirm>
-            </template>
+              </el-pagination>
+
+            </div>
+          </el-scrollbar>
+        </el-col>
+
+        <el-col :span="12">
+          <el-card class="box-card" shadow="never">
+            <div slot="header" class="clearfix">
+              <span>分配权限</span>
+              <el-button style="float: right; padding: 3px 0" type="text" @click="showMenuMessageBox">保存权限</el-button>
+            </div>
+
+            <el-scrollbar style="height: 300px">
+              <el-tree
+                  :data="menuList"
+                  show-checkbox
+                  node-key="id"
+                  ref="tree"
+                  :default-expanded-keys="expandIds"
+                  highlight-current
+                  :props="defaultProps">
+              </el-tree>
+            </el-scrollbar>
+
+          </el-card>
+        </el-col>
+      </el-row>
 
 
-          </el-table-column>
-        </el-table>
+    </div>
 
-      </div>
-      <!--    分页-->
-      <div class="page-box">
-        <el-pagination
-            background
-            layout="prev, pager, next"
-            :total="total"
-            :page-size="searchParams.pageSize"
-            :current-page="searchParams.currentPage"
-            @current-change="currentPageChange"
-        >
-        </el-pagination>
-
-      </div>
-    </el-scrollbar>
     <!--    弹框-->
     <el-dialog
         title="实体操作"

@@ -31,14 +31,14 @@
       </div>
       <!--    操作功能 -->
       <div class="crud-box">
-        <el-button type="primary" size="mini" icon="el-icon-edit" @click="dialogVisible=true,formData={},getRootDeptList(),isTop=true">
+        <el-button type="primary" size="mini" v-has-perm="['dept:add']" icon="el-icon-edit" @click="dialogVisible=true,formData={},getRootDeptList(),isTop=true">
           新建
         </el-button>
-        <el-button type="success" size="mini" icon="el-icon-edit"
+        <el-button type="success" size="mini" icon="el-icon-edit" v-has-perm="['dept:edit']"
                    @click="dialogVisible=true,findById()" :disabled="disable">修改
         </el-button>
         <el-button type="danger" size="mini" icon="el-icon-delete"
-                   @click="showBatchDeleteDialog" :disabled="disable">删除
+                   v-has-perm="['dept:delete']" @click="showBatchDeleteDialog" :disabled="disable">删除
         </el-button>
       </div>
     </div>
@@ -81,7 +81,7 @@
               label="操作">
             <template v-slot="obj">
               <el-button type="primary" size="mini" icon="el-icon-edit"
-                         @click="dialogVisible=true,formData.id=obj.row.id,findById()"
+                         v-has-perm="['dept:edit']"    @click="dialogVisible=true,formData.id=obj.row.id,findById()"
                          style="margin-right: 5px"></el-button>
               <el-popconfirm
                   confirm-button-text='确定'
@@ -93,7 +93,7 @@
                   title="是否要删除本条记录？"
               >
                 <el-button slot="reference" type="danger" size="mini" @click="formData.id=obj.row.id"
-                           icon="el-icon-delete"></el-button>
+                           v-has-perm="['dept:delete']"    icon="el-icon-delete"></el-button>
               </el-popconfirm>
             </template>
           </el-table-column>

@@ -44,15 +44,21 @@
       </div>
       <!--    操作功能 -->
       <div class="crud-box">
-        <el-button type="primary" size="mini" icon="el-icon-edit" @click="dialogVisible=true,resetFormData()">
+        <el-button v-has-perm="['admin:add']" type="primary" size="mini" icon="el-icon-edit"
+                   @click="dialogVisible=true,resetFormData(),resetRule()">
           新建
         </el-button>
         <el-button type="success" size="mini" icon="el-icon-edit" :disabled="batchIds.length!=1"
-                   @click="dialogVisible=true,findById()">修改
+                   v-has-perm="['admin:edit']" @click="dialogVisible=true,findById()">修改
         </el-button>
         <el-button type="danger" size="mini" icon="el-icon-delete" :disabled="batchIds.length<=0"
-                   @click="showBatchDeleteDialog">删除
+                   v-has-perm="['admin:delete']" @click="showBatchDeleteDialog">删除
         </el-button>
+        <!--        <el-button type="warning" size="mini" icon="el-icon-download" @click="exportExcel">导出-->
+        <!--        </el-button>-->
+        <el-link type="" :underline="false" v-has-perm="['admin:export']"
+                 class="el-button el-button--warning el-button--mini" icon="el-icon-download" :href="exportURL">导出
+        </el-link>
       </div>
     </div>
     <!--可滚动区域-->
@@ -157,7 +163,7 @@
               label="员工头像"
               width="180">
             <template v-slot="obj">
-              <el-avatar size="30" :src="obj.row.adminAvatar"></el-avatar>
+              <el-avatar :size="30" :src="obj.row.adminAvatar"></el-avatar>
             </template>
           </el-table-column>
 
@@ -171,11 +177,12 @@
 
 
           <el-table-column
+
               align="center"
               label="操作">
             <template v-slot="obj">
-              <el-button type="primary" size="mini" icon="el-icon-edit"
-                         @click="dialogVisible=true,formData.id=obj.row.id,findById()"
+              <el-button type="primary" size="mini" icon="el-icon-edit" v-has-perm="['admin:edit']"
+                         @click="dialogVisible=true,formData.id=obj.row.id,findById(),resetRule()"
                          style="margin-right: 5px"></el-button>
               <el-popconfirm
                   confirm-button-text='确定'
@@ -187,6 +194,7 @@
                   title="是否要删除本条记录？"
               >
                 <el-button slot="reference" type="danger" size="mini" @click="formData.id=obj.row.id"
+                           v-has-perm="['admin:delete']"
                            icon="el-icon-delete"></el-button>
               </el-popconfirm>
             </template>
@@ -216,16 +224,16 @@
         :visible.sync="dialogVisible"
         width="39%"
     >
-      <el-form ref="form" label-width="80px" size="mini">
+      <el-form ref="form" label-width="80px" size="mini" :model="formData" :rules="rules">
 
         <el-row :gutter="20">
           <el-col :span="12">
-            <el-form-item label="员工名称">
+            <el-form-item label="员工名称" prop="adminName">
               <el-input v-model="formData.adminName"></el-input>
             </el-form-item>
           </el-col>
           <el-col :span="12">
-            <el-form-item label="员工昵称">
+            <el-form-item label="员工昵称" prop="nickName">
               <el-input v-model="formData.nickName"></el-input>
             </el-form-item>
           </el-col>
@@ -233,12 +241,12 @@
 
         <el-row :gutter="20">
           <el-col :span="12">
-            <el-form-item label="手机号码">
+            <el-form-item label="手机号码" prop="adminPhone">
               <el-input v-model="formData.adminPhone"></el-input>
             </el-form-item>
           </el-col>
           <el-col :span="12">
-            <el-form-item label="邮箱地址">
+            <el-form-item label="邮箱地址" prop="adminEmail">
               <el-input v-model="formData.adminEmail"></el-input>
             </el-form-item>
           </el-col>
@@ -286,7 +294,7 @@
                     :label="item.roleName"
                     :value="item.id">
                 </el-option>
-                </el-select>
+              </el-select>
             </el-form-item>
           </el-col>
         </el-row>
@@ -322,7 +330,7 @@
 
         <el-row :gutter="20">
           <el-col :span="24">
-            <el-form-item label="详细地址">
+            <el-form-item label="详细地址" prop="adminAddress">
               <el-input type="textarea" v-model="formData.adminAddress"/>
             </el-form-item>
           </el-col>
@@ -350,7 +358,7 @@
       </el-form>
       <span slot="footer" class="dialog-footer">
         <el-button size="mini" @click="dialogVisible = false">取 消</el-button>
-        <el-button type="primary" size="mini" @click="dialogVisible = false,addOrEdit()">确 定</el-button>
+        <el-button type="primary" size="mini" @click="addOrEdit">确 定</el-button>
   </span>
     </el-dialog>
   </div>

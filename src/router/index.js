@@ -11,7 +11,14 @@ const routes = [
         path: '/',
         name: 'Main',
         component: Home,
-        children:[
+        redirect:"/index",
+        children: [
+
+            {
+                path: 'index',
+                name: 'Index',
+                component: () => import(/* webpackChunkName: "about" */ '../views/index/index.vue')
+            },
             {
                 path: 'brand',
                 name: 'Brand',
@@ -50,8 +57,6 @@ const routes = [
                 name: 'menu',
                 component: () => import(/* webpackChunkName: "about" */ '../views/menu/index.vue')
             },
-
-
 
 
         ]

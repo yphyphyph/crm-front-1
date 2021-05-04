@@ -14,105 +14,8 @@
               text-color="#606266"
               router
           >
-            <el-menu-item index="/">
-              <i class="el-icon-menu"></i>
-              <span slot="title">系统首页</span>
-            </el-menu-item>
-            <el-submenu index="2">
-              <template slot="title">
-                <i class="el-icon-location"></i>
-                <span>商品相关</span>
-              </template>
-              <el-menu-item index="/brand">
-                <i class="el-icon-menu"></i>
-                <span slot="title">品牌管理</span>
-              </el-menu-item>
-              <el-menu-item index="/category">
-                <i class="el-icon-menu"></i>
-                <span slot="title">分类管理</span>
-              </el-menu-item>
+            <huige-item v-for="(item,index) in menuList" :key="index" :item="item"/>
 
-              <el-menu-item index="/good">
-                <i class="el-icon-menu"></i>
-                <span slot="title">商品管理</span>
-              </el-menu-item>
-            </el-submenu>
-            <el-submenu index="3">
-              <template slot="title">
-                <i class="el-icon-location"></i>
-                <span>员工相关</span>
-              </template>
-              <el-menu-item index="/dept">
-                <i class="el-icon-menu"></i>
-                <span slot="title">部门管理</span>
-              </el-menu-item>
-              <el-menu-item index="3-2">
-                <i class="el-icon-menu"></i>
-                <span slot="title">员工管理</span>
-              </el-menu-item>
-            </el-submenu>
-
-
-            <el-submenu index="4">
-              <template slot="title">
-                <i class="el-icon-location"></i>
-                <span>系统管理</span>
-              </template>
-              <el-menu-item index="4-1">
-                <i class="el-icon-menu"></i>
-                <span slot="title">角色管理</span>
-              </el-menu-item>
-              <el-menu-item index="4-2">
-                <i class="el-icon-menu"></i>
-                <span slot="title">权限管理</span>
-              </el-menu-item>
-              <el-submenu index="5">
-                <template slot="title">
-                  <i class="el-icon-location"></i>
-                  <span>日志相关</span>
-                </template>
-                <el-menu-item index="5-1">
-                  <i class="el-icon-menu"></i>
-                  <span slot="title">登录日志</span>
-                </el-menu-item>
-                <el-menu-item index="5-2">
-                  <i class="el-icon-menu"></i>
-                  <span slot="title">操作日志</span>
-                </el-menu-item>
-              </el-submenu>
-
-            </el-submenu>
-
-
-            <el-submenu index="5">
-              <template slot="title">
-                <i class="el-icon-location"></i>
-                <span>测试滚动条</span>
-              </template>
-              <el-menu-item index="5-1">
-                <i class="el-icon-menu"></i>
-                <span slot="title">测试滚动条</span>
-              </el-menu-item>
-              <el-menu-item index="5-2">
-                <i class="el-icon-menu"></i>
-                <span slot="title">测试滚动条</span>
-              </el-menu-item>
-              <el-submenu index="6">
-                <template slot="title">
-                  <i class="el-icon-location"></i>
-                  <span>测试滚动条</span>
-                </template>
-                <el-menu-item index="6-1">
-                  <i class="el-icon-menu"></i>
-                  <span slot="title">测试滚动条</span>
-                </el-menu-item>
-                <el-menu-item index="6-2">
-                  <i class="el-icon-menu"></i>
-                  <span slot="title">测试滚动条</span>
-                </el-menu-item>
-              </el-submenu>
-
-            </el-submenu>
           </el-menu>
         </el-scrollbar>
 
@@ -142,16 +45,25 @@
 <script>
 
 import moment from 'moment'
+
+import huigeItem from "@/components/huigeItem";
+
 export default {
   name: "index",
+  components: {huigeItem},
   data() {
     return {
-      time: ''
+      time: '',
+      menuList: []
     }
   },
   created() {
+    this.menuList  = JSON.parse(localStorage.getItem("menuList"));
+
+
+
     setInterval(() =>
-        this.time= moment().format('yyyy-MM-DD HH:mm:ss')
+            this.time = moment().format('yyyy-MM-DD HH:mm:ss')
         , 1000);
   }
 }

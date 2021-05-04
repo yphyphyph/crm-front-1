@@ -59,13 +59,13 @@
           <!--    操作功能 -->
           <div class="crud-box">
             <el-button type="primary" size="mini" icon="el-icon-edit"
-                       @click="dialogVisible=true,formData={},imgUrl=''">新建
+                       v-has-perm="['good:add']"      @click="dialogVisible=true,formData={},imgUrl=''">新建
             </el-button>
             <el-button type="success" size="mini" icon="el-icon-edit" :disabled="batchIds.length!=1"
-                       @click="dialogVisible=true,findById()">修改
+                       v-has-perm="['good:edit']"      @click="dialogVisible=true,findById()">修改
             </el-button>
             <el-button type="danger" size="mini" icon="el-icon-delete" :disabled="!batchIds.length>0"
-                       @click="showBatchDeleteDialog"
+                       v-has-perm="['good:batch']"     @click="showBatchDeleteDialog"
             >删除
             </el-button>
           </div>
@@ -117,7 +117,7 @@
                 label="操作">
               <template v-slot="obj">
                 <el-button type="primary" size="mini" icon="el-icon-edit"
-                           @click="dialogVisible=true,formData.id=obj.row.id,findById()"
+                           v-has-perm="['good:edit']"   @click="dialogVisible=true,formData.id=obj.row.id,findById()"
                            style="margin-right: 5px"></el-button>
                 <el-popconfirm
                     confirm-button-text='确定'
@@ -129,7 +129,7 @@
                     title="是否要删除本条记录？"
                 >
                   <el-button slot="reference" type="danger" size="mini" @click="formData.id=obj.row.id"
-                             icon="el-icon-delete"></el-button>
+                             v-has-perm="['good:delete']"    icon="el-icon-delete"></el-button>
                 </el-popconfirm>
               </template>
             </el-table-column>

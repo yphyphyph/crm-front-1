@@ -55,6 +55,22 @@ export function updateEntity(entity) {
  * 查询所有的角色
  * @returns {Promise<AxiosResponse<any>>}
  */
-export function  findAll(){
+export function findAll() {
     return instance.get(`role/findAll`);
+}
+
+/**
+ * 给角色赋予权限
+ */
+
+export function setRoleMenus(roleId, menuIds) {
+    return instance.put(`role/${roleId}/menu`, menuIds)
+
+}
+
+/**
+ * 通过角色Id获取角色的权限
+ */
+export function getMenuByRoleId(id) {
+    return instance.get(`role/${id}/treeMenu`)
 }
